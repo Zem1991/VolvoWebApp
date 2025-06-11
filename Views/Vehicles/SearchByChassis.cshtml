@@ -1,0 +1,23 @@
+﻿<h4>Search a vehicle by its chassis</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ShowSearchByChassisResults">
+            <div class="form-group">
+                <label name="ChassisSeries" class="control-label"></label>
+                <input name="ChassisSeries" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label name="ChassisNumber" class="control-label"></label>
+                <input name="ChassisNumber" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

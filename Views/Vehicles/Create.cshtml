@@ -29,7 +29,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
-                <select asp-for="Type" class="form-control"></select>
+                @{
+                    var values = Enum.GetValues(typeof(VolvoWebApp.Enums.VehicleType)).Cast<VolvoWebApp.Enums.VehicleType>();
+                    IEnumerable<SelectListItem> types =
+                    from value in values
+                    select new SelectListItem
+                    {
+                        Text = value.ToString(),
+                        Value = value.ToString(),
+                        // Selected = (value.Equals(VolvoWebApp.Enums.VehicleType.Truck))
+                    };
+                }
+                @Html.DropDownList("Type", types)
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
