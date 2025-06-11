@@ -1,6 +1,6 @@
 ﻿namespace VolvoWebApp.Models
 {
-    public class ChassisIdModel
+    public class ChassisId
     {
         public string? Series { get; set; }
         public uint Number { get; set; }
