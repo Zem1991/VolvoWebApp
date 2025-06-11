@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using VolvoWebApp.Models;
 
 namespace VolvoWebApp.Data
 {
@@ -9,5 +10,6 @@ namespace VolvoWebApp.Data
             : base(options)
         {
         }
+        public DbSet<VolvoWebApp.Models.Vehicle> Vehicle { get; set; } = default!;
     }
 }
