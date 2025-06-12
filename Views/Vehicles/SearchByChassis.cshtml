@@ -4,13 +4,20 @@
     <div class="col-md-4">
         <form asp-action="ShowSearchByChassisResults">
             <div class="form-group">
+                <h6>
+                </h6>
+                    Chassis Series
                 <label name="ChassisSeries" class="control-label"></label>
                 <input name="ChassisSeries" class="form-control" />
             </div>
             <div class="form-group">
+                <h6>
+                </h6>
+                    Chassis Number
                 <label name="ChassisNumber" class="control-label"></label>
                 <input name="ChassisNumber" class="form-control" />
             </div>
+            <p></p>
             <div class="form-group">
                 <input type="submit" value="Search" class="btn btn-primary" />
             </div>
@@ -19,5 +26,5 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
 </div>
