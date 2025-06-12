@@ -21,3 +21,8 @@ body {
   margin-bottom: 60px;
   background: #eee;
 }
+
+.btn {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+}
