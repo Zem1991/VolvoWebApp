@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using VolvoWebApp.Data;
+using VolvoWebApp.Dtos;
 using VolvoWebApp.Models;
 
 namespace VolvoWebApp.Controllers
@@ -14,10 +17,12 @@ namespace VolvoWebApp.Controllers
     public class VehiclesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public VehiclesController(ApplicationDbContext context)
+        public VehiclesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: Vehicles
@@ -103,9 +108,9 @@ namespace VolvoWebApp.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,ChassisSeries,ChassisNumber,Type,Color")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,ChassisSeries,ChassisNumber,Type,Color")] VehicleUpdateDTO vehicleDto)
         {
-            if (id != vehicle.Id)
+            if (id != vehicleDto.Id)
             {
                 return NotFound();
             }
@@ -114,12 +119,21 @@ namespace VolvoWebApp.Controllers
             {
                 try
                 {
+                    Vehicle? vehicle = _context.Vehicle.FirstOrDefault(x => x.Id == vehicleDto.Id);
+                    if (vehicle == null)
+                    {
+                        return NotFound();
+                    }
+
+                    vehicle = _mapper.Map(vehicleDto, vehicle);
+                    //Vehicle vehicle = _mapper.Map<Vehicle>(vehicleDto);
+                    //vehicle.Color = vehicleDto.Color;
                     _context.Update(vehicle);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleExists(vehicle.Id))
+                    if (!VehicleExists(vehicleDto.Id))
                     {
                         return NotFound();
                     }
@@ -130,7 +144,7 @@ namespace VolvoWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicle);
+            return View(vehicleDto);
         }
 
         // GET: Vehicles/Delete/5
