@@ -28,11 +28,12 @@ namespace VolvoWebApp.Controllers
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Vehicle.ToListAsync());
+            return View(await _context.Vehicle.OrderByDescending(x => x.LastUpdate).ToListAsync());
         }
 
         // GET: Vehicles/SearchByChassis
-        public async Task<IActionResult> SearchByChassis()
+        //public async Task<IActionResult> SearchByChassis()
+        public IActionResult SearchByChassis()
         {
             return View();
         }
@@ -126,8 +127,7 @@ namespace VolvoWebApp.Controllers
                     }
 
                     vehicle = _mapper.Map(vehicleDto, vehicle);
-                    //Vehicle vehicle = _mapper.Map<Vehicle>(vehicleDto);
-                    //vehicle.Color = vehicleDto.Color;
+                    vehicle.WriteUpdate();
                     _context.Update(vehicle);
                     await _context.SaveChangesAsync();
                 }

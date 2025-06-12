@@ -11,6 +11,6 @@ namespace VolvoWebApp.Dtos
         public string Id { get; set; } = $"{Guid.NewGuid()}";
         [Required]
         [DisplayName("Color")]
-        public string Color { get; set; }
+        public string Color { get; set; } = string.Empty;
     }
 }

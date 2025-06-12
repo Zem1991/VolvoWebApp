@@ -27,6 +27,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Color)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastUpdate)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -44,6 +50,12 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Color)
+            </td>
+            <td>
+                 @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                 @Html.DisplayFor(modelItem => item.LastUpdate)
             </td>
             <td>
                 <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">
