@@ -30,7 +30,8 @@
 </div>
 
 <div>
-    <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+    <input type="button" value="Cancel" class="btn btn-secondary" onclick="history.go(-1)" />
+    @* <a class="btn btn-secondary" asp-action="Index">Cancel</a> *@
 </div>
 
 @section Scripts {

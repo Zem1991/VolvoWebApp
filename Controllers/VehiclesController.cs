@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using VolvoWebApp.Data;
 using VolvoWebApp.Dtos;
 using VolvoWebApp.Models;
@@ -41,7 +42,12 @@ namespace VolvoWebApp.Controllers
         // POST: Vehicles/ShowSearchByChassisResults
         public async Task<IActionResult> ShowSearchByChassisResults(string chassisSeries, uint chassisNumber)
         {
-            return View("Index", await _context.Vehicle.Where(x => x.ChassisSeries.Equals(chassisSeries) || x.ChassisNumber == chassisNumber).ToListAsync());
+            List<Vehicle> filtered = await _context.Vehicle
+                .Where(x => 
+                    (string.IsNullOrEmpty(chassisSeries) || x.ChassisSeries.Equals(chassisSeries)) 
+                    && (string.IsNullOrEmpty($"{chassisNumber}") || x.ChassisNumber == chassisNumber))
+                .ToListAsync();
+            return base.View("Index", filtered);
         }
 
         // GET: Vehicles/Details/5
@@ -79,9 +85,18 @@ namespace VolvoWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vehicle);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(vehicle);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    string message = ex.InnerException?.Message ?? ex.Message;
+                    TempData["ErrorMessage"] = message;
+                    ModelState.AddModelError("", message);
+                }
             }
             return View(vehicle);
         }
@@ -142,6 +157,12 @@ namespace VolvoWebApp.Controllers
                         throw;
                     }
                 }
+                catch (Exception ex)
+                {
+                    string message = ex.InnerException?.Message ?? ex.Message;
+                    TempData["ErrorMessage"] = message;
+                    ModelState.AddModelError("", message);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(vehicleDto);
@@ -173,13 +194,23 @@ namespace VolvoWebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var vehicle = await _context.Vehicle.FindAsync(id);
-            if (vehicle != null)
+            try
             {
-                _context.Vehicle.Remove(vehicle);
-            }
+                if (vehicle != null)
+                {
+                    _context.Vehicle.Remove(vehicle);
+                }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                string message = ex.InnerException?.Message ?? ex.Message;
+                TempData["ErrorMessage"] = message;
+                ModelState.AddModelError("", message);
+            }
+            return View(vehicle);
         }
 
         private bool VehicleExists(string id)
