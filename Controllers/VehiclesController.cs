@@ -41,7 +41,7 @@ namespace VolvoWebApp.Controllers
         // POST: Vehicles/ShowSearchByChassisResults
         public async Task<IActionResult> ShowSearchByChassisResults(string chassisSeries, uint chassisNumber)
         {
-            return View("Index", await _context.Vehicle.Where(x => x.ChassisSeries.Equals(chassisSeries) && x.ChassisNumber == chassisNumber).ToListAsync());
+            return View("Index", await _context.Vehicle.Where(x => x.ChassisSeries.Equals(chassisSeries) || x.ChassisNumber == chassisNumber).ToListAsync());
         }
 
         // GET: Vehicles/Details/5
