@@ -69,7 +69,7 @@ namespace VolvoWebApp.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ChassisSeries,ChassisNumber,Type,Color")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("ChassisSeries,ChassisNumber,Type,Color")] Vehicle vehicle)
         {
             if (ModelState.IsValid)
             {

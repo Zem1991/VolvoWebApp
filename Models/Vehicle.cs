@@ -8,7 +8,7 @@ namespace VolvoWebApp.Models
     public class Vehicle
     {
         [DisplayName("Id")]
-        public string Id { get; set; }
+        public string Id { get; set; } = $"{Guid.NewGuid()}";
         [DisplayName("Chassis Series")]
         public string ChassisSeries { get; set; }
         [DisplayName("Chassis Number")]
