@@ -8,7 +8,8 @@ namespace VolvoWebApp.Configurations
     {
         public VolvoProfile()
         {
-            //from dto object to database model, for UPDATING
+            CreateMap<Vehicle, VehicleReadDTO>();
+            CreateMap<VehicleCreateDTO, Vehicle>();
             CreateMap<VehicleUpdateDTO, Vehicle>()
                 .ForAllMembers(opt => opt.Condition((src, dest, value) => value != null));
         }

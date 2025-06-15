@@ -16,6 +16,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAutoMapper(typeof(VolvoProfile));
+builder.Services.AddServices();
+builder.Services.AddRepositories();
 
 var app = builder.Build();
 
