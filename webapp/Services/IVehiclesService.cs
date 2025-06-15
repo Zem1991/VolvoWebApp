@@ -1,9 +1,9 @@
-﻿using VolvoWebApp.Models;
+﻿using VolvoWebApp.Dtos;
 
 namespace VolvoWebApp.Services
 {
     public interface IVehiclesService
     {
-        Task<IEnumerable<Vehicle>> GetByChassisId(string chassisSeries, uint chassisNumber);
+        Task<IEnumerable<VehicleReadDTO>> GetByChassisId(string chassisSeries, uint chassisNumber);
     }
 }

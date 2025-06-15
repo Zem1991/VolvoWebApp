@@ -7,14 +7,17 @@ namespace VolvoWebApp.Services
 {
     public class VehiclesService : BaseService<Vehicle, VehicleReadDTO, VehicleCreateDTO, VehicleUpdateDTO>, IVehiclesService
     {
+        private readonly IVehiclesRepository _repository;
+
         public VehiclesService(IMapper mapper, IVehiclesRepository repository) : base(mapper, repository)
         {
+            _repository = repository;
         }
 
-        public async Task<IEnumerable<Vehicle>> GetByChassisId(string chassisSeries, uint chassisNumber)
+        public async Task<IEnumerable<VehicleReadDTO>> GetByChassisId(string chassisSeries, uint chassisNumber)
         {
-            IEnumerable<Vehicle> result = await ((IVehiclesRepository)_repository).GetByChassisId(chassisSeries, chassisNumber);
-            return (IEnumerable<Vehicle>)_mapper.Map<IEnumerable<VehicleReadDTO>>(result);
+            IEnumerable<Vehicle> result = await _repository.GetByChassisId(chassisSeries, chassisNumber);
+            return _mapper.Map<IEnumerable<VehicleReadDTO>>(result);
         }
     }
 }

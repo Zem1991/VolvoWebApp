@@ -7,45 +7,45 @@ namespace VolvoWebApp.Services
     public class BaseService<Data, ReadDto, CreateDto, UpdateDto> : IBaseService<Data, ReadDto, CreateDto, UpdateDto> where Data : BaseRecord
     {
         protected readonly IMapper _mapper;
-        protected readonly IBaseRepository<Data> _repository;
+        protected readonly IBaseRepository<Data> _baseRepository;
 
-        public BaseService(IMapper mapper, IBaseRepository<Data> repository)
+        public BaseService(IMapper mapper, IBaseRepository<Data> baseRepository)
         {
             _mapper = mapper;
-            _repository = repository;
+            _baseRepository = baseRepository;
         }
 
         public async Task<IEnumerable<ReadDto>> GetAllAsync()
         {
-            IEnumerable<Data> result = await _repository.GetAllAsync();
+            IEnumerable<Data> result = await _baseRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<ReadDto>>(result);
         }
 
         public async Task<ReadDto?> GetByIdAsync(string id)
         {
-            Data? result = await _repository.GetByIdAsync(id);
+            Data? result = await _baseRepository.GetByIdAsync(id);
             return _mapper.Map<ReadDto>(result);
         }
 
         public async Task<bool> CreateAsync(CreateDto vehicle)
         {
             Data entity = _mapper.Map<CreateDto, Data>(vehicle);
-            bool result = await _repository.InsertAsync(entity);
+            bool result = await _baseRepository.InsertAsync(entity);
             return result;
         }
 
         public async Task<bool> UpdateAsync(UpdateDto vehicle)
         {
             Data entity = _mapper.Map<UpdateDto, Data>(vehicle);
-            bool result = await _repository.UpdateAsync(entity);
+            bool result = await _baseRepository.UpdateAsync(entity);
             return result;
         }
 
         public async Task<bool> DeleteAsync(string id)
         {
-            Data? entity = await _repository.GetByIdAsync(id);
+            Data? entity = await _baseRepository.GetByIdAsync(id);
             if (entity == null) return false;
-            bool result = await _repository.DeleteAsync(entity);
+            bool result = await _baseRepository.DeleteAsync(entity);
             return result;
         }
     }
