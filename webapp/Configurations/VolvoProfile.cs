@@ -9,6 +9,7 @@ namespace VolvoWebApp.Configurations
         public VolvoProfile()
         {
             CreateMap<Vehicle, VehicleReadDTO>();
+            CreateMap<VehicleReadDTO, VehicleUpdateDTO>();
             CreateMap<VehicleCreateDTO, Vehicle>();
             CreateMap<VehicleUpdateDTO, Vehicle>()
                 .ForAllMembers(opt => opt.Condition((src, dest, value) => value != null));

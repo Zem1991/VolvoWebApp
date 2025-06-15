@@ -1,4 +1,4 @@
-﻿@model VolvoWebApp.Models.Vehicle
+﻿@model VolvoWebApp.Dtos.VehicleUpdateDTO
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,9 +13,6 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="ChassisSeries" />
-            <input type="hidden" asp-for="ChassisNumber" />
-            <input type="hidden" asp-for="Type" />
             <div class="form-group">
                 <label asp-for="Color" class="control-label"></label>
                 <input asp-for="Color" class="form-control" />

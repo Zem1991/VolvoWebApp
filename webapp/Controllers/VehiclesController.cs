@@ -12,24 +12,42 @@ using Microsoft.IdentityModel.Tokens;
 using VolvoWebApp.Data;
 using VolvoWebApp.Dtos;
 using VolvoWebApp.Models;
+using VolvoWebApp.Services;
 
 namespace VolvoWebApp.Controllers
 {
     public class VehiclesController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IVehiclesService _service;
 
-        public VehiclesController(ApplicationDbContext context, IMapper mapper)
+        public VehiclesController(IMapper mapper, IVehiclesService service)
         {
-            _context = context;
             _mapper = mapper;
+            _service = service;
         }
 
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Vehicle.OrderByDescending(x => x.LastUpdate).ToListAsync());
+            IEnumerable<VehicleReadDTO> data = await _service.GetAllAsync();
+            //TODO: if error shows, use data.tolist()
+            return View(data);
+        }
+
+        // GET: Vehicles/Details/5
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var vehicle = await _service.GetByIdAsync(id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return View(vehicle);
         }
 
         // GET: Vehicles/SearchByChassis
@@ -42,30 +60,8 @@ namespace VolvoWebApp.Controllers
         // POST: Vehicles/ShowSearchByChassisResults
         public async Task<IActionResult> ShowSearchByChassisResults(string chassisSeries, uint chassisNumber)
         {
-            List<Vehicle> filtered = await _context.Vehicle
-                .Where(x => 
-                    (string.IsNullOrEmpty(chassisSeries) || x.ChassisSeries.Equals(chassisSeries)) 
-                    && (string.IsNullOrEmpty($"{chassisNumber}") || x.ChassisNumber == chassisNumber))
-                .ToListAsync();
-            return base.View("Index", filtered);
-        }
-
-        // GET: Vehicles/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vehicle = await _context.Vehicle
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
-
-            return View(vehicle);
+            IEnumerable<VehicleReadDTO> data = await _service.GetByChassisId(chassisSeries, chassisNumber);
+            return base.View("Index", data);
         }
 
         // GET: Vehicles/Create
@@ -81,14 +77,13 @@ namespace VolvoWebApp.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ChassisSeries,ChassisNumber,Type,Color")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("ChassisSeries,ChassisNumber,Type,Color")] VehicleCreateDTO dto)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Add(vehicle);
-                    await _context.SaveChangesAsync();
+                    await _service.CreateAsync(dto);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -98,7 +93,7 @@ namespace VolvoWebApp.Controllers
                     ModelState.AddModelError("", message);
                 }
             }
-            return View(vehicle);
+            return View(dto);
         }
 
         // GET: Vehicles/Edit/5
@@ -109,13 +104,13 @@ namespace VolvoWebApp.Controllers
             {
                 return NotFound();
             }
-
-            var vehicle = await _context.Vehicle.FindAsync(id);
+            var vehicle = await _service.GetByIdAsync(id);
             if (vehicle == null)
             {
                 return NotFound();
             }
-            return View(vehicle);
+            VehicleUpdateDTO toUpdate = _mapper.Map<VehicleUpdateDTO>(vehicle);
+            return View(toUpdate);
         }
 
         // POST: Vehicles/Edit/5
@@ -124,31 +119,22 @@ namespace VolvoWebApp.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,ChassisSeries,ChassisNumber,Type,Color")] VehicleUpdateDTO vehicleDto)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Color")] VehicleUpdateDTO dto)
         {
-            if (id != vehicleDto.Id)
+            if (id != dto.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    Vehicle? vehicle = _context.Vehicle.FirstOrDefault(x => x.Id == vehicleDto.Id);
-                    if (vehicle == null)
-                    {
-                        return NotFound();
-                    }
-
-                    vehicle = _mapper.Map(vehicleDto, vehicle);
-                    vehicle.WriteUpdate();
-                    _context.Update(vehicle);
-                    await _context.SaveChangesAsync();
+                    await _service.UpdateAsync(dto);
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleExists(vehicleDto.Id))
+                    if (!VehicleExists(dto.Id))
                     {
                         return NotFound();
                     }
@@ -165,7 +151,7 @@ namespace VolvoWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicleDto);
+            return View(dto);
         }
 
         // GET: Vehicles/Delete/5
@@ -176,14 +162,11 @@ namespace VolvoWebApp.Controllers
             {
                 return NotFound();
             }
-
-            var vehicle = await _context.Vehicle
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var vehicle = await _service.GetByIdAsync(id);
             if (vehicle == null)
             {
                 return NotFound();
             }
-
             return View(vehicle);
         }
 
@@ -193,15 +176,9 @@ namespace VolvoWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var vehicle = await _context.Vehicle.FindAsync(id);
             try
             {
-                if (vehicle != null)
-                {
-                    _context.Vehicle.Remove(vehicle);
-                }
-
-                await _context.SaveChangesAsync();
+                await _service.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -210,12 +187,12 @@ namespace VolvoWebApp.Controllers
                 TempData["ErrorMessage"] = message;
                 ModelState.AddModelError("", message);
             }
-            return View(vehicle);
+            return View();
         }
 
         private bool VehicleExists(string id)
         {
-            return _context.Vehicle.Any(e => e.Id == id);
+            return _service.GetByIdAsync(id) != null;
         }
     }
 }

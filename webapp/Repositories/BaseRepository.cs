@@ -42,6 +42,7 @@ namespace VolvoWebApp.Repositories
         {
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
+            entity.WriteUpdate();
             _entities.Update(entity);
             await _context.SaveChangesAsync();
             return true;

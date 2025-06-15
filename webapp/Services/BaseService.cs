@@ -18,6 +18,7 @@ namespace VolvoWebApp.Services
         public async Task<IEnumerable<ReadDto>> GetAllAsync()
         {
             IEnumerable<Data> result = await _baseRepository.GetAllAsync();
+            result = result.OrderByDescending(x => x.LastUpdate);
             return _mapper.Map<IEnumerable<ReadDto>>(result);
         }
 
