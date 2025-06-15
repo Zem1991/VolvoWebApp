@@ -10,7 +10,7 @@ namespace VolvoWebApp.Repositories
         {
         }
 
-        public virtual async Task<List<Vehicle>> GetByChassisId(string chassisSeries, uint chassisNumber)
+        public async Task<List<Vehicle>> GetByChassisId(string chassisSeries, uint chassisNumber)
         {
             List<Vehicle> result = await _entities
                 .AsNoTracking()

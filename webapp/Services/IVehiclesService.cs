@@ -1,13 +1,9 @@
-﻿using VolvoWebApp.Dtos;
+﻿using VolvoWebApp.Models;
 
 namespace VolvoWebApp.Services
 {
     public interface IVehiclesService
     {
-        Task<bool> CreateAsync(VehicleCreateDTO vehicle);
-        Task<bool> DeleteAsync(string id);
-        Task<IEnumerable<VehicleReadDTO>> GetAllAsync();
-        Task<VehicleReadDTO?> GetByIdAsync(string id);
-        Task<bool> UpdateAsync(VehicleUpdateDTO vehicle);
+        Task<IEnumerable<Vehicle>> GetByChassisId(string chassisSeries, uint chassisNumber);
     }
 }
