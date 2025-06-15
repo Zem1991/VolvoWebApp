@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using VolvoWebApp.Configurations;
 using VolvoWebApp.Data;
-using VolvoWebApp.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 

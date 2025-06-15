@@ -2,7 +2,7 @@
 
 namespace VolvoWebApp.Repositories
 {
-    public interface IVehiclesRepository
+    public interface IVehiclesRepository : IBaseRepository<Vehicle>
     {
         Task<List<Vehicle>> GetByChassisId(string chassisSeries, uint chassisNumber);
     }

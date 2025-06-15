@@ -2,7 +2,7 @@
 using VolvoWebApp.Dtos;
 using VolvoWebApp.Models;
 
-namespace VolvoWebApp.Profiles
+namespace VolvoWebApp.Configurations
 {
     public class VolvoProfile : Profile
     {
