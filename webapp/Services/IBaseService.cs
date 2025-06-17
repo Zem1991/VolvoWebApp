@@ -1,4 +1,4 @@
-﻿using VolvoWebApp.Models;
+﻿using VolvoWebApp.Data.Entities;
 
 namespace VolvoWebApp.Services
 {

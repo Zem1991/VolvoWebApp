@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VolvoWebApp.Data;
-using VolvoWebApp.Models;
+using VolvoWebApp.Data.Entities;
 
 namespace VolvoWebApp.Repositories
 {

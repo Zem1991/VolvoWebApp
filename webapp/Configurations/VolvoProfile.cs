@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using VolvoWebApp.Data.Entities;
 using VolvoWebApp.Dtos;
+using VolvoWebApp.Models;
 
 namespace VolvoWebApp.Configurations
 {
@@ -9,8 +10,10 @@ namespace VolvoWebApp.Configurations
         public VolvoProfile()
         {
             CreateMap<Vehicle, VehicleReadDTO>();
-            CreateMap<VehicleReadDTO, VehicleUpdateDTO>();
+            CreateMap<VehicleReadDTO, VehicleModel>();
+            CreateMap<VehicleModel, VehicleCreateDTO>();
             CreateMap<VehicleCreateDTO, Vehicle>();
+            CreateMap<VehicleModel, VehicleUpdateDTO>();
             CreateMap<VehicleUpdateDTO, Vehicle>()
                 .ForAllMembers(opt => opt.Condition((src, dest, value) => value != null));
         }

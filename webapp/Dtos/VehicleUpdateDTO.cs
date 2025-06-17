@@ -4,13 +4,10 @@ using VolvoWebApp.Enums;
 
 namespace VolvoWebApp.Dtos
 {
-    public class VehicleUpdateDTO
+    public class VehicleUpdateDTO : BaseUpdateDTO
     {
         [Required]
-        [DisplayName("Id")]
-        public string Id { get; set; } = $"{Guid.NewGuid()}";
-        [Required]
         [DisplayName("Color")]
-        public string Color { get; set; } = string.Empty;
+        public string Color { get; set; }
     }
 }

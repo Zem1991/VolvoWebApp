@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using VolvoWebApp.Data.Entities;
+using VolvoWebApp.Models;
 
 namespace VolvoWebApp.Data
 {

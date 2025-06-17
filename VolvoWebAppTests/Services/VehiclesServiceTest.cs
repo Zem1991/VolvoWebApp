@@ -4,6 +4,7 @@ using VolvoWebApp.Configurations;
 using VolvoWebApp.Data.Entities;
 using VolvoWebApp.Dtos;
 using VolvoWebApp.Enums;
+using VolvoWebApp.Models;
 using VolvoWebApp.Repositories;
 using VolvoWebApp.Services;
 
