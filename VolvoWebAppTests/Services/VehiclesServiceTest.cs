@@ -7,7 +7,7 @@ using VolvoWebApp.Enums;
 using VolvoWebApp.Repositories;
 using VolvoWebApp.Services;
 
-namespace VolvoWebAppTests.Repositories
+namespace VolvoWebAppTests.Services
 {
     public class VehiclesServiceTest
     {
@@ -119,7 +119,8 @@ namespace VolvoWebAppTests.Repositories
             var entity = _testEntities[0];
             entity.ChassisSeries = cSeries;
             entity.ChassisNumber = cNumber;
-            _mockRepository.Setup(r => r.GetByChassisId(cSeries, cNumber)).ReturnsAsync([entity]);
+            List<Vehicle> entityList = [entity];
+            _mockRepository.Setup(r => r.GetByChassisId(cSeries, cNumber)).ReturnsAsync(entityList);
             // Act
             var result = await _service.GetByChassisId(cSeries, cNumber);
             var firstResult = result.FirstOrDefault();

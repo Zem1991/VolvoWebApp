@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
@@ -42,13 +41,12 @@ namespace VolvoWebAppTests.Controllers
         }
 
         [Fact]
-        public async Task Index_ShouldReturnViewWithVehicles()
+        public async Task GetAllAsync()
         {
             // Arrange
             var entities = _testEntities;
             var dtos = _mapper.Map<IEnumerable<VehicleReadDTO>>(entities);
-            var models = _mapper.Map<IEnumerable<VehicleReadDTO>>(dtos);
-            _mockService.Setup(s => s.GetAllAsync()).ReturnsAsync(models);
+            _mockService.Setup(s => s.GetAllAsync()).ReturnsAsync(dtos);
             // Act
             var result = await _controller.Index();
             // Assert
@@ -58,46 +56,92 @@ namespace VolvoWebAppTests.Controllers
         }
 
         [Fact]
-        public async Task Details_ShouldReturnNotFound_WhenIdIsNull()
+        public async void GetByIdAsync()
         {
-            var result = await _controller.Details(null);
-            Assert.IsType<NotFoundResult>(result);
+            // Arrange
+            var entity = _testEntities[0];
+            var dto = _mapper.Map<VehicleReadDTO>(entity);
+            _mockService.Setup(r => r.GetByIdAsync(entity.Id)).ReturnsAsync(dto);
+            // Act
+            var result = await _controller.Details(entity.Id);
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<VehicleModel>(viewResult.Model);
+            Assert.NotNull(model);
         }
 
-        //[Fact]
-        //public async Task Details_ShouldReturnView_WhenVehicleExists()
-        //{
-        //    var vehicle = new Vehicle { Id = 1, Model = "Truck", Year = 2019 };
-        //    _contextMock.Setup(c => c.Vehicles.FindAsync(1)).ReturnsAsync(vehicle);
+        [Fact]
+        public async void CreateAsync()
+        {
+            // Arrange
+            var entity = _testEntities[0];
+            var readDto = _mapper.Map<VehicleReadDTO>(entity);
+            var model = _mapper.Map<VehicleModel>(readDto);
+            //var arrangeDto = new VehicleCreateDTO()
+            //{
+            //    ChassisSeries = entity.ChassisSeries,
+            //    ChassisNumber = entity.ChassisNumber,
+            //    Type = entity.Type,
+            //    Color = entity.Color,
+            //};
+            _mockService.Setup(r => r.CreateAsync(It.IsAny<VehicleCreateDTO>())).ReturnsAsync(true);
+            // Act
+            var result = await _controller.Create(model);
+            // Assert
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+        }
 
-        //    var result = await _controller.Details(1);
+        [Fact]
+        public async void UpdateAsync()
+        {
+            // Arrange
+            var entity = _testEntities[0];
+            var readDto = _mapper.Map<VehicleReadDTO>(entity);
+            var model = _mapper.Map<VehicleModel>(readDto);
+            //var arrangeDto = new VehicleUpdateDTO()
+            //{
+            //    Id = entity.Id,
+            //    Color = entity.Color,
+            //};
+            _mockService.Setup(r => r.UpdateAsync(It.IsAny<VehicleUpdateDTO>())).ReturnsAsync(true);
+            // Act
+            var result = await _controller.Edit(model.Id, model);
+            // Assert
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+        }
 
-        //    var viewResult = Assert.IsType<ViewResult>(result);
-        //    var model = Assert.IsType<Vehicle>(viewResult.Model);
-        //    Assert.Equal(vehicle.Id, model.Id);
-        //}
+        [Fact]
+        public async void DeleteAsync()
+        {
+            // Arrange
+            var entity = _testEntities[0];
+            var readDto = _mapper.Map<VehicleReadDTO>(entity);
+            var model = _mapper.Map<VehicleModel>(readDto);
+            _mockService.Setup(r => r.DeleteAsync(model.Id)).ReturnsAsync(true);
+            // Act
+            var result = await _controller.DeleteConfirmed(model.Id);
+            // Assert
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+        }
 
-        //[Fact]
-        //public async Task Create_ShouldRedirectToIndex_WhenModelIsValid()
-        //{
-        //    var vehicle = new Vehicle { Id = 1, Model = "Bike", Year = 2022 };
-
-        //    var result = await _controller.Create(vehicle);
-
-        //    var redirectResult = Assert.IsType<RedirectToActionResult>(result);
-        //    Assert.Equal("Index", redirectResult.ActionName);
-        //}
-
-        //[Fact]
-        //public async Task Create_ShouldReturnView_WhenModelStateIsInvalid()
-        //{
-        //    _controller.ModelState.AddModelError("Model", "Required");
-
-        //    var vehicle = new Vehicle { Id = 2, Year = 2023 }; // Model está faltando
-
-        //    var result = await _controller.Create(vehicle);
-
-        //    Assert.IsType<ViewResult>(result);
-        //}
+        [Fact]
+        public async void GetByChassisId()
+        {
+            // Arrange
+            string cSeries = "TestSeries";
+            uint cNumber = 7;
+            var entity = _testEntities[0];
+            entity.ChassisSeries = cSeries;
+            entity.ChassisNumber = cNumber;
+            var dto = _mapper.Map<VehicleReadDTO>(entity);
+            IEnumerable<VehicleReadDTO> dtoList = [dto];
+            _mockService.Setup(r => r.GetByChassisId(cSeries, cNumber)).ReturnsAsync(dtoList);
+            // Act
+            var result = await _controller.ShowSearchByChassisResults(cSeries, cNumber);
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<IEnumerable<VehicleModel>>(viewResult.Model);
+            Assert.NotEmpty(model);
+        }
     }
 }
