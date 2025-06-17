@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using VolvoWebApp.Enums;
+using VolvoWebApp.Models;
 
-namespace VolvoWebApp.Models
+namespace VolvoWebApp.Data.Entities
 {
     public class Vehicle : BaseRecord
     {

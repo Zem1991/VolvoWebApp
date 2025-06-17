@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using VolvoWebApp.Data.Entities;
 using VolvoWebApp.Dtos;
-using VolvoWebApp.Models;
 using VolvoWebApp.Repositories;
 
 namespace VolvoWebApp.Services

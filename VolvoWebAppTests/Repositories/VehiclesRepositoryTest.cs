@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using VolvoWebApp.Data;
+using VolvoWebApp.Data.Entities;
 using VolvoWebApp.Enums;
-using VolvoWebApp.Models;
 using VolvoWebApp.Repositories;
 
 namespace VolvoWebAppTests.Repositories
