@@ -38,7 +38,7 @@ namespace VolvoWebAppTests.Repositories
         {
             // Arrange
             var entities = _testEntities;
-            _mockRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(entities);
+            _mockRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(entities);
             // Act
             var result = await _service.GetAllAsync();
             // Assert
@@ -50,7 +50,7 @@ namespace VolvoWebAppTests.Repositories
         {
             // Arrange
             var entity = _testEntities[0];
-            _mockRepository.Setup(repo => repo.GetByIdAsync(entity.Id)).ReturnsAsync(entity);
+            _mockRepository.Setup(r => r.GetByIdAsync(entity.Id)).ReturnsAsync(entity);
             // Act
             var result = await _service.GetByIdAsync(entity.Id);
             // Assert
@@ -70,7 +70,7 @@ namespace VolvoWebAppTests.Repositories
                 Color = entity.Color,
             };
             entity = _mapper.Map<VehicleCreateDTO, Vehicle>(dto);
-            _mockRepository.Setup(repo => repo.InsertAsync(It.IsAny<Vehicle>())).ReturnsAsync(true);
+            _mockRepository.Setup(r => r.InsertAsync(It.IsAny<Vehicle>())).ReturnsAsync(true);
             // Act
             var success = await _service.CreateAsync(dto);
             // Assert
@@ -89,7 +89,7 @@ namespace VolvoWebAppTests.Repositories
                 Color = newColor,
             };
             entity = _mapper.Map<VehicleUpdateDTO, Vehicle>(dto);
-            _mockRepository.Setup(repo => repo.UpdateAsync(It.IsAny<Vehicle>())).ReturnsAsync(true);
+            _mockRepository.Setup(r => r.UpdateAsync(It.IsAny<Vehicle>())).ReturnsAsync(true);
             // Act
             var success = await _service.UpdateAsync(dto);
             // Assert
@@ -103,8 +103,8 @@ namespace VolvoWebAppTests.Repositories
             // Arrange
             var entity = _testEntities[0];
             var recordId = entity.Id;
-            _mockRepository.Setup(repo => repo.GetByIdAsync(recordId)).ReturnsAsync(entity);
-            _mockRepository.Setup(repo => repo.DeleteAsync(entity)).ReturnsAsync(true);
+            _mockRepository.Setup(r => r.GetByIdAsync(recordId)).ReturnsAsync(entity);
+            _mockRepository.Setup(r => r.DeleteAsync(entity)).ReturnsAsync(true);
             // Act
             var success = await _service.DeleteAsync(recordId);
             // Assert
@@ -120,7 +120,7 @@ namespace VolvoWebAppTests.Repositories
             var entity = _testEntities[0];
             entity.ChassisSeries = cSeries;
             entity.ChassisNumber = cNumber;
-            _mockRepository.Setup(repo => repo.GetByChassisId(cSeries, cNumber)).ReturnsAsync([entity]);
+            _mockRepository.Setup(r => r.GetByChassisId(cSeries, cNumber)).ReturnsAsync([entity]);
             // Act
             var result = await _service.GetByChassisId(cSeries, cNumber);
             var firstResult = result.FirstOrDefault();
