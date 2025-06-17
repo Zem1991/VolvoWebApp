@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using VolvoWebApp.Data;
 using VolvoWebApp.Data.Entities;
 using VolvoWebApp.Enums;
-using VolvoWebApp.Models;
 using VolvoWebApp.Repositories;
 
 namespace VolvoWebAppTests.Repositories
@@ -14,9 +13,9 @@ namespace VolvoWebAppTests.Repositories
 
         private readonly List<Vehicle> _testEntities =
         [
-            new Vehicle() { ChassisSeries = "ChassisSeriesA", ChassisNumber = 1, Type = VehicleType.Truck, Color = "Red" },
-            new Vehicle() { ChassisSeries = "ChassisSeriesB", ChassisNumber = 1, Type = VehicleType.Truck, Color = "Blue" },
-            new Vehicle() { ChassisSeries = "ChassisSeriesC", ChassisNumber = 2, Type = VehicleType.Truck, Color = "Green" },
+            new() { ChassisSeries = "ChassisSeriesA", ChassisNumber = 1, Type = VehicleType.Bus, Color = "Red" },
+            new() { ChassisSeries = "ChassisSeriesB", ChassisNumber = 1, Type = VehicleType.Car, Color = "Blue" },
+            new() { ChassisSeries = "ChassisSeriesC", ChassisNumber = 2, Type = VehicleType.Truck, Color = "Green" },
         ];
 
         public VehiclesRepositoryTest()

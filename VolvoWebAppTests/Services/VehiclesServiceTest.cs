@@ -4,7 +4,6 @@ using VolvoWebApp.Configurations;
 using VolvoWebApp.Data.Entities;
 using VolvoWebApp.Dtos;
 using VolvoWebApp.Enums;
-using VolvoWebApp.Models;
 using VolvoWebApp.Repositories;
 using VolvoWebApp.Services;
 
@@ -18,9 +17,9 @@ namespace VolvoWebAppTests.Repositories
 
         private readonly List<Vehicle> _testEntities =
         [
-            new Vehicle() { ChassisSeries = "ChassisSeriesA", ChassisNumber = 1, Type = VehicleType.Truck, Color = "Red" },
-            new Vehicle() { ChassisSeries = "ChassisSeriesB", ChassisNumber = 1, Type = VehicleType.Truck, Color = "Blue" },
-            new Vehicle() { ChassisSeries = "ChassisSeriesC", ChassisNumber = 2, Type = VehicleType.Truck, Color = "Green" },
+            new() { ChassisSeries = "ChassisSeriesA", ChassisNumber = 1, Type = VehicleType.Bus, Color = "Red" },
+            new() { ChassisSeries = "ChassisSeriesB", ChassisNumber = 1, Type = VehicleType.Car, Color = "Blue" },
+            new() { ChassisSeries = "ChassisSeriesC", ChassisNumber = 2, Type = VehicleType.Truck, Color = "Green" },
         ];
 
         public VehiclesServiceTest()
@@ -70,7 +69,6 @@ namespace VolvoWebAppTests.Repositories
                 Type = entity.Type,
                 Color = entity.Color,
             };
-            entity = _mapper.Map<VehicleCreateDTO, Vehicle>(dto);
             _mockRepository.Setup(r => r.InsertAsync(It.IsAny<Vehicle>())).ReturnsAsync(true);
             // Act
             var success = await _service.CreateAsync(dto);
