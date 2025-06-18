@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using VolvoWebApp.Data;
@@ -71,6 +72,24 @@ namespace VolvoWebApp.Controllers
                     VehicleCreateDTO dto = _mapper.Map<VehicleCreateDTO>(model);
                     await _service.CreateAsync(dto);
                     return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException ex)
+                {
+                    if (ex.InnerException is SqlException sqlEx &&
+                        (sqlEx.Number == 2601 || sqlEx.Number == 2627)) // Violação de chave única
+                    {
+                        var msg = sqlEx.Message;
+                        if (msg.Contains("AK_Vehicle_ChassisSeries_ChassisNumber"))
+                        {
+                            string message = "There is already a vehicle with this Chassis Series and Chassis Number.";
+                            TempData["ErrorMessage"] = message;
+                            ModelState.AddModelError("", message);
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -186,8 +205,8 @@ namespace VolvoWebApp.Controllers
         // POST: Vehicles/ShowSearchByChassisResults
         public async Task<IActionResult> ShowSearchByChassisResults(string chassisSeries, uint chassisNumber)
         {
-            if (chassisSeries is null)
-                throw new ArgumentNullException(nameof(chassisSeries));
+            //if (chassisSeries is null)
+            //    throw new ArgumentNullException(nameof(chassisSeries));
             //if (chassisNumber is null)
             //    throw new ArgumentNullException(nameof(chassisNumber));
             IEnumerable<VehicleReadDTO> data = await _service.GetByChassisId(chassisSeries, chassisNumber);
