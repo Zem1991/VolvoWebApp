@@ -59,12 +59,10 @@ namespace VolvoWebApp.Controllers
         }
 
         // POST: Vehicles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ChassisSeries,ChassisNumber,Type,Color")] VehicleModel model)
+        public async Task<IActionResult> Create(VehicleModel model)
         {
             if (ModelState.IsValid)
             {
@@ -102,12 +100,10 @@ namespace VolvoWebApp.Controllers
         }
 
         // POST: Vehicles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,ChassisSeries,ChassisNumber,Type,Color")] VehicleModel model)
+        public async Task<IActionResult> Edit(string id, VehicleModel model)
         {
             if (id != model.Id)
             {
