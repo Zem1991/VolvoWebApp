@@ -6,8 +6,8 @@ namespace VolvoWebApp.Services
     {
         Task<IEnumerable<ReadDto>> GetAllAsync();
         Task<ReadDto?> GetByIdAsync(string id);
-        Task<bool> CreateAsync(CreateDto vehicle);
-        Task<bool> UpdateAsync(UpdateDto vehicle);
+        Task<bool> CreateAsync(CreateDto dto);
+        Task<bool> UpdateAsync(UpdateDto dto);
         Task<bool> DeleteAsync(string id);
     }
 }

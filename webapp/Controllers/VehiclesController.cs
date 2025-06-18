@@ -42,28 +42,13 @@ namespace VolvoWebApp.Controllers
             {
                 return NotFound();
             }
-            VehicleReadDTO data = await _service.GetByIdAsync(id);
+            VehicleReadDTO? data = await _service.GetByIdAsync(id);
             if (data == null)
             {
                 return NotFound();
             }
             VehicleModel model = _mapper.Map<VehicleModel>(data);
             return View(model);
-        }
-
-        // GET: Vehicles/SearchByChassis
-        //public async Task<IActionResult> SearchByChassis()
-        public IActionResult SearchByChassis()
-        {
-            return View();
-        }
-
-        // POST: Vehicles/ShowSearchByChassisResults
-        public async Task<IActionResult> ShowSearchByChassisResults(string chassisSeries, uint chassisNumber)
-        {
-            IEnumerable<VehicleReadDTO> data = await _service.GetByChassisId(chassisSeries, chassisNumber);
-            IEnumerable<VehicleModel> model = _mapper.Map<IEnumerable<VehicleModel>>(data);
-            return base.View("Index", model);
         }
 
         // GET: Vehicles/Create
@@ -107,7 +92,7 @@ namespace VolvoWebApp.Controllers
             {
                 return NotFound();
             }
-            VehicleReadDTO data = await _service.GetByIdAsync(id);
+            VehicleReadDTO? data = await _service.GetByIdAsync(id);
             if (data == null)
             {
                 return NotFound();
@@ -166,7 +151,7 @@ namespace VolvoWebApp.Controllers
             {
                 return NotFound();
             }
-            VehicleReadDTO data = await _service.GetByIdAsync(id);
+            VehicleReadDTO? data = await _service.GetByIdAsync(id);
             if (data == null)
             {
                 return NotFound();
@@ -193,6 +178,25 @@ namespace VolvoWebApp.Controllers
                 ModelState.AddModelError("", message);
             }
             return View();
+        }
+
+        // GET: Vehicles/SearchByChassis
+        //public async Task<IActionResult> SearchByChassis()
+        public IActionResult SearchByChassis()
+        {
+            return View();
+        }
+
+        // POST: Vehicles/ShowSearchByChassisResults
+        public async Task<IActionResult> ShowSearchByChassisResults(string chassisSeries, uint chassisNumber)
+        {
+            if (chassisSeries is null)
+                throw new ArgumentNullException(nameof(chassisSeries));
+            //if (chassisNumber is null)
+            //    throw new ArgumentNullException(nameof(chassisNumber));
+            IEnumerable<VehicleReadDTO> data = await _service.GetByChassisId(chassisSeries, chassisNumber);
+            IEnumerable<VehicleModel> model = _mapper.Map<IEnumerable<VehicleModel>>(data);
+            return base.View("Index", model);
         }
 
         private bool VehicleExists(string id)

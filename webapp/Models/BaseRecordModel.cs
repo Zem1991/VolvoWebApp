@@ -5,9 +5,8 @@ namespace VolvoWebApp.Models
 {
     public class BaseRecordModel
     {
-        [Required]
         [DisplayName("Id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
         [Editable(false)]
         [DisplayName("Created Date")]
         public DateTime CreatedDate { get; set; }

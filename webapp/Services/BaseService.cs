@@ -28,16 +28,20 @@ namespace VolvoWebApp.Services
             return _mapper.Map<ReadDto>(result);
         }
 
-        public async Task<bool> CreateAsync(CreateDto vehicle)
+        public async Task<bool> CreateAsync(CreateDto dto)
         {
-            Data entity = _mapper.Map<CreateDto, Data>(vehicle);
+            if (dto is null)
+                throw new ArgumentNullException(nameof(dto));
+            Data entity = _mapper.Map<CreateDto, Data>(dto);
             bool result = await _baseRepository.InsertAsync(entity);
             return result;
         }
 
-        public async Task<bool> UpdateAsync(UpdateDto vehicle)
+        public async Task<bool> UpdateAsync(UpdateDto dto)
         {
-            Data entity = _mapper.Map<UpdateDto, Data>(vehicle);
+            if (dto is null)
+                throw new ArgumentNullException(nameof(dto));
+            Data entity = _mapper.Map<UpdateDto, Data>(dto);
             bool result = await _baseRepository.UpdateAsync(entity);
             return result;
         }

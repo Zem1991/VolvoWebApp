@@ -12,6 +12,10 @@ namespace VolvoWebApp.Repositories
 
         public async Task<List<Vehicle>> GetByChassisId(string chassisSeries, uint chassisNumber)
         {
+            if (chassisSeries is null)
+                throw new ArgumentNullException(nameof(chassisSeries));
+            //if (chassisNumber is null)
+            //    throw new ArgumentNullException(nameof(chassisNumber));
             List<Vehicle> result = await _entities
                 .AsNoTracking()
                 .Where(x =>
