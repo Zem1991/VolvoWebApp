@@ -10,8 +10,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using VolvoWebApp.Data;
 using VolvoWebApp.Dtos;
+using VolvoWebApp.Enums;
 using VolvoWebApp.Models;
 using VolvoWebApp.Services;
 
@@ -57,7 +57,7 @@ namespace VolvoWebApp.Controllers
         public IActionResult Create()
         {
             ViewBag.VehicleTypes = new SelectList(
-                Enum.GetValues(typeof(Enums.VehicleType)).Cast<VolvoWebApp.Enums.VehicleType>()
+                Enum.GetValues(typeof(VehicleType)).Cast<VehicleType>()
             );
             return View();
         }

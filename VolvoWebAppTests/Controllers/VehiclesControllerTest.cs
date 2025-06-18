@@ -137,7 +137,7 @@ namespace VolvoWebAppTests.Controllers
             IEnumerable<VehicleReadDTO> dtoList = [dto];
             _mockService.Setup(r => r.GetByChassisId(cSeries, cNumber)).ReturnsAsync(dtoList);
             // Act
-            var result = await _controller.ShowSearchByChassisResults(cSeries, cNumber);
+            var result = await _controller.ShowSearchByChassisResults(cSeries, $"{cNumber}");
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<IEnumerable<VehicleModel>>(viewResult.Model);
