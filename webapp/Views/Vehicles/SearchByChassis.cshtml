@@ -1,17 +1,23 @@
-﻿<h4>Search a vehicle by its chassis</h4>
+﻿@model VolvoWebApp.Models.VehicleModel
+
+@{
+    ViewData["Title"] = "Search by Chassis";
+}
+
+<h4>Search a vehicle by its chassis</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="ShowSearchByChassisResults">
             <div class="form-group">
-                Chassis Series
-                <label name="ChassisSeries" class="control-label"></label>
-                <input name="ChassisSeries" class="form-control" required />
+                <label asp-for="ChassisSeries" class="control-label"></label>
+                <input asp-for="ChassisSeries" class="form-control" />
+                <span asp-validation-for="ChassisSeries" class="text-danger"></span>
             </div>
             <div class="form-group">
-                Chassis Number
-                <label name="ChassisNumber" class="control-label"></label>
-                <input name="ChassisNumber" class="form-control" required />
+                <label asp-for="ChassisNumber" class="control-label"></label>
+                <input asp-for="ChassisNumber" class="form-control" />
+                <span asp-validation-for="ChassisNumber" class="text-danger"></span>
             </div>
             <p></p>
             <div class="form-group">

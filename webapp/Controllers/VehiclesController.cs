@@ -203,15 +203,22 @@ namespace VolvoWebApp.Controllers
         }
 
         // POST: Vehicles/ShowSearchByChassisResults
-        public async Task<IActionResult> ShowSearchByChassisResults(string chassisSeries, uint chassisNumber)
+        public async Task<IActionResult> ShowSearchByChassisResults(string chassisSeries, string chassisNumber)
         {
-            //if (chassisSeries is null)
-            //    throw new ArgumentNullException(nameof(chassisSeries));
-            //if (chassisNumber is null)
-            //    throw new ArgumentNullException(nameof(chassisNumber));
-            IEnumerable<VehicleReadDTO> data = await _service.GetByChassisId(chassisSeries, chassisNumber);
-            IEnumerable<VehicleModel> model = _mapper.Map<IEnumerable<VehicleModel>>(data);
-            return base.View("Index", model);
+            bool validNumber = uint.TryParse(chassisNumber, out uint chassisNumberUint);
+            if (chassisSeries is null || !validNumber)
+            {
+                string message = "All fields must be filled properly.";
+                TempData["ErrorMessage"] = message;
+                ModelState.AddModelError("", message);
+                return View(nameof(SearchByChassis), null);
+            }
+            else
+            {
+                IEnumerable<VehicleReadDTO> data = await _service.GetByChassisId(chassisSeries, chassisNumberUint);
+                IEnumerable<VehicleModel> model = _mapper.Map<IEnumerable<VehicleModel>>(data);
+                return base.View("Index", model);
+            }
         }
 
         private bool VehicleExists(string id)
