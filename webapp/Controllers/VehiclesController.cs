@@ -56,6 +56,9 @@ namespace VolvoWebApp.Controllers
         [Authorize]
         public IActionResult Create()
         {
+            ViewBag.VehicleTypes = new SelectList(
+                Enum.GetValues(typeof(Enums.VehicleType)).Cast<VolvoWebApp.Enums.VehicleType>()
+            );
             return View();
         }
 
