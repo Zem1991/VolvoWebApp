@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VolvoWebApp.Configurations;
@@ -19,8 +20,16 @@ builder.Services.AddAutoMapper(typeof(VolvoProfile));
 builder.Services.AddServices();
 builder.Services.AddRepositories();
 
-//// Required for Docker
-//builder.WebHost.UseUrls("http://0.0.0.0:80");
+// Without this, Docker will forget the encryption keys at each restart.
+builder.Services.AddDataProtection()
+    .SetApplicationName("VolvoWebApp")
+    .PersistKeysToFileSystem(new DirectoryInfo("/var/dpkeys"));
+
+// Needed this just to make Docker access its own db (named 'db') while letting Visual Studio run with a localhosted db.
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
 
 var app = builder.Build();
 
