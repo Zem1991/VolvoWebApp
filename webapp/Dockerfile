@@ -4,16 +4,17 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
 EXPOSE 80
+#EXPOSE 8080
+#EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-#ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY webapp/VolvoWebApp.csproj webapp/
-WORKDIR /src/webapp
-RUN dotnet restore
-
-COPY webapp/. .
-RUN dotnet publish -c Release -o /app/publish
+COPY ["webapp/VolvoWebApp.csproj", "webapp/"]
+RUN dotnet restore "./webapp/./VolvoWebApp.csproj"
+COPY . .
+WORKDIR "/src/webapp"
+RUN dotnet build "./VolvoWebApp.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release

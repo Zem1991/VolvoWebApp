@@ -1,32 +1,36 @@
-version: '3.9'
+version: '3.4'
 
 networks:
   appnet:
+    driver: bridge
 
 services:
+  volvodb:
+    container_name: volvo-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "pa55w0rd!"
+    ports:
+      - "1433:1433"
+    networks:
+      - appnet
+
   volvowebapp:
+    container_name: volvo-web-app
+    image: ${DOCKER_REGISTRY-}volvowebapp
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: webapp/Dockerfile
     ports:
-      - "8080:80"
+      - 8080:80
     depends_on:
-      - db
+      - volvodb
     environment:
-      - ConnectionStrings__Default=Server=db;Database=VolvoDb;User Id=sa;Password=pa55w0rd!;
+      - ConnectionStrings__Default=Server=volvodb;Database=VolvoDb;User Id=sa;Password=pa55w0rd!;
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Docker
     volumes:
       - ./dpkeys:/var/dpkeys
-    networks:
-      - appnet
-
-  db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-      SA_PASSWORD: "pa55w0rd!"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433"
     networks:
       - appnet
