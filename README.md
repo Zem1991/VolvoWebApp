@@ -12,7 +12,7 @@ Made using:
 
 ## Instructions
 1. Download/clone this repository, then run it with Docker. You can quickly create everything with this command: 
-docker-compose up -build -d
+docker-compose up --build -d
 2. Viewing records can be done without loging in, but creating/updating/deleting will require registering first. Only an email and password is needed, and these will be stored within the project's own database.
 
 ### Why Docker? Why not just use a Microsoft LocalDb?
