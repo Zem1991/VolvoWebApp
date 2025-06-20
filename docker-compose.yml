@@ -1,4 +1,7 @@
-version: '3.4'
+version: '3.9'
+
+networks:
+  appnet:
 
 services:
   volvowebapp:
@@ -15,11 +18,15 @@ services:
       - ASPNETCORE_ENVIRONMENT=Docker
     volumes:
       - ./dpkeys:/var/dpkeys
+    networks:
+      - appnet
 
   db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       SA_PASSWORD: "pa55w0rd!"
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
+    networks:
+      - appnet
